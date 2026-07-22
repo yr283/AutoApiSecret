@@ -24,8 +24,11 @@ def gettoken(refresh_token):
           'client_secret':secret,
           'redirect_uri':'http://localhost:53682/'
          }
-    html = req.post('https://login.microsoftonline.com/common/oauth2/v2.0/token',data=data,headers=headers)
+    html = req.post(url, data=data, headers=headers)
     jsontxt = json.loads(html.text)
+    if 'error' in jsontxt:
+    print("OAuth 失败:", jsontxt.get('error'), jsontxt.get('error_description'))
+    sys.exit(1)
     refresh_token = jsontxt['refresh_token']
     access_token = jsontxt['access_token']
     with open(path, 'w+') as f:
